@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Манга</title>
+    <style>
+        body { background: black; color: white; text-align: center; }
+        img { width: 100%; max-width: 800px; }
+        button { font-size: 20px; margin: 10px; }
+    </style>
+</head>
+<body>
+    <img id="mangaPage">
+    <div>
+        <button onclick="prevPage()">Назад</button>
+        <button onclick="nextPage()">Вперёд</button>
+    </div>
+
+    <script>
+        let currentPage = 0;
+        let pages = [];
+
+        fetch('/api/pages')
+            .then(response => response.json())
+            .then(data => {
+                pages = data.pages;
+                if (pages.length > 0) {
+                    document.getElementById('mangaPage').src = pages[0];
+                } else {
+                    document.body.innerHTML = "Фоток нет!";
+                }
+            })
+            .catch(error => {
+                console.log("Ошибка:", error);
+                document.body.innerHTML = "Что-то сломалось!";
+            });
+
+        function nextPage() {
+            if (currentPage < pages.length - 1) {
+                currentPage = currentPage + 1;
+                document.getElementById('mangaPage').src = pages[currentPage];
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 0) {
+                currentPage = currentPage - 1;
+                document.getElementById('mangaPage').src = pages[currentPage];
+            }
+        }
+    </script>
+</body>
+</html>
